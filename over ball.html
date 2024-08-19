@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Ball Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, rgba(255, 204, 0, 0.8), rgba(255, 102, 153, 0.8)), 
+                        url('https://example.com/cricket-image.jpg') no-repeat center center/cover; 
+            /* Replace the URL with the actual path to your cricket image */
+            position: relative;
+        }
+        .header-text {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: blue;
+        }
+        .footer-text {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 16px;
+            color: blue;
+        }
+        .over-container {
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #balls-list {
+            margin-top: 20px;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+            display: none; /* Hidden initially */
+        }
+        #completed-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            display: none; /* Hidden initially */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-text">OVER COUNTER</div>
+
+    <div class="over-container">
+        <h2>Over 1</h2>
+        <p>Total Runs: <span id="total-runs">0</span></p>
+        <div>
+            <button onclick="addBall('1')">1 Run</button>
+            <button onclick="addBall('2')">2 Runs</button>
+            <button onclick="addBall('3')">3 Runs</button>
+            <button onclick="addBall('4')">4 Runs</button>
+            <button onclick="addBall('5')">5 Runs</button>
+            <button onclick="addBall('6')">6 Runs</button>
+            <button onclick="addBall('no-ball')">No Ball</button>
+            <button onclick="addBall('wide-ball')">Wide Ball</button>
+            <button onclick="addBall('dead-ball')">Dead Ball</button>
+        </div>
+    </div>
+
+    <button id="completed-btn" onclick="showChart()">Completed</button> <!-- Button to show completed over -->
+
+    <div id="balls-list"></div>
+
+    <button onclick="nextOver()">Next Over</button>
+
+    <div class="footer-text">MADE BY SUPRAB</div>
+
+    <script>
+        let totalRuns = 0;
+        let balls = [];
+        let overCount = 1;
+
+        function addBall(run) {
+            if (balls.length < 6) {
+                balls.push(run);
+                updateTotalRuns(run);
+            } else {
+                alert('Over is complete. Click "Next Over" to continue.');
+            }
+        }
+
+        function updateTotalRuns(run) {
+            if (!isNaN(run)) {
+                totalRuns += parseInt(run);
+                document.getElementById('total-runs').innerText = totalRuns;
+            }
+        }
+
+        function nextOver() {
+            if (balls.length === 6) {
+                document.getElementById('completed-btn').style.display = 'block'; // Show the "Completed" button
+                displayOver();
+                overCount++;
+                balls = [];
+                document.querySelector('.over-container h2').innerText = `Over ${overCount}`;
+                document.getElementById('total-runs').innerText = totalRuns;
+            } else {
+                alert('The over is not complete yet. Please add all 6 balls.');
+            }
+        }
+
+        function displayOver() {
+            const overDiv = document.createElement('div');
+            overDiv.innerHTML = `<h3>Over ${overCount}</h3><p>Balls: ${balls.join(', ')}</p><p>Total Runs in Over: ${balls.reduce((acc, run) => !isNaN(run) ? acc + parseInt(run) : acc, 0)}</p>`;
+            document.getElementById('balls-list').appendChild(overDiv);
+        }
+
+        function showChart() {
+            document.getElementById('balls-list').style.display = 'block'; // Show the list of balls in chart format
+            document.getElementById('completed-btn').style.display = 'none'; // Hide the "Completed" button
+        }
+    </script>
+
+</body>
+</html>
